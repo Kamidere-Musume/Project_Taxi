@@ -1,7 +1,7 @@
 import tkinter as tk
 from login import Login
 from signup import Signup
-from dashboard import dashboard
+from booking import dashboard
 from driver_dash import driver_dash
 class MainApp(tk.Tk):
     user_id = None
