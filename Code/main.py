@@ -2,9 +2,9 @@ import tkinter as tk
 from login import Login
 from signup import Signup
 from booking import dashboard
-from driver_dash import driver_dash
+from driver_dash import driverdash
 class MainApp(tk.Tk):
-    user_id = None
+    user_id = None  
     def __init__(self):
         super().__init__()
 
@@ -17,7 +17,7 @@ class MainApp(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (Signup, Login,dashboard,driver_dash):
+        for F in (Signup, Login,dashboard):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -32,14 +32,7 @@ class MainApp(tk.Tk):
         self.title(frame.title)
         frame.tkraise()
 
-class id(MainApp):
-    def __init__(self,user_id,driver_id):
-        super().__init__()
-        
-        self.driver_id = driver_id
-        self.user_id = user_id
-        
-    
+
 if __name__ == "__main__":
     app = MainApp()
     app.mainloop()

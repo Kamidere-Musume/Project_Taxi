@@ -53,8 +53,6 @@ class dashboard(tk.Frame):
       value = IntVar()
       value.set(self.distance_slid.get())
       
-      
-      
       def getvalue(event):
           value.set(self.calc())
           self.dis_lbl.config(textvariable=value)
@@ -72,11 +70,12 @@ class dashboard(tk.Frame):
       
    def bookingdb(self):
       con,cur = dbcon()
-      query = "insert into booking(Booking_Id,User_Id,Current_location,Destination,Price,Distance) values(%s,%s,%s,%s,%s,%s)"
-      values = (0,self.controller.user_id,self.start_txt.get(),self.desti_txt.get(),self.calc(),self.distance_slid.get())
+      query = "insert into booking(Booking_Id,User_Id,Current_location,Destination,Price,Distance,Booking_Status) values(%s,%s,%s,%s,%s,%s,%s)"
+      values = (0,self.controller.user_id,self.start_txt.get(),self.desti_txt.get(),self.calc(),self.distance_slid.get(),"Pending")
       cur.execute(query,values)
       con.commit()
       cur.close()
+      con.close()
       #self.cleardata()
    
    def calc(self):

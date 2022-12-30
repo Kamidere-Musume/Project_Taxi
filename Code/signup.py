@@ -127,7 +127,7 @@ class Signup(tk.Frame):
              messagebox.showerror("Error","Invalid Password",parent = self)
              
         # Phone Number Validation 
-        elif not re.search(r'^\d{9}$',self.phone_txt.get()):
+        elif not re.search(r'^\d{10}$',self.phone_txt.get()):
             messagebox.showerror("Error","Phone number must be 9 digits",parent = self)
         
         else:

@@ -70,12 +70,13 @@ class Login(tk.Frame):
             if self.user_box.get() == "Customer":
                 cur.execute(query,values)
                 myresult = cur.fetchall()
-            
+               
+                
                 if len(myresult)<1:
                     messagebox.showerror("Error","Email or Password incorrect")
                 
                 elif len(myresult)>0:
-                    self.controller.user_id = myresult[0]
+                    self.controller.user_id = myresult[0][0]
                     self.controller.show_frame("dashboard")
             
             # Driver Dashboard
