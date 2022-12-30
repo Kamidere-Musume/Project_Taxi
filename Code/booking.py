@@ -4,7 +4,8 @@ from help import absPath,dbcon
 from tkinter import ttk
 from tkinter import messagebox
 import csv
-#class dashboard(tk.Tk):
+from ttkwidgets.autocomplete import AutocompleteCombobox
+#class Dashboard(tk.Tk):
 class Dashboard(tk.Frame):
    graph = dict()
    def __init__(self,parent,controller):
@@ -50,16 +51,26 @@ class Dashboard(tk.Frame):
       # Start Label 
       start_lbl = canvas.create_text(70,123, text="Current Location",fill="white",font=("Helvatica",10))
       
-      # Start Entry Box
-      self.start_txt = tk.Entry(canvas)
+      # Start Auto complete
+      self.start_txt = AutocompleteCombobox(
+         canvas, 
+         width=30, 
+         font=('Helvatica', 10),
+         completevalues=list(self.graph.keys())
+         )
       self.start_txt.place(x=145,y=110, height=25, width=150)
       
    # Destination 
       # Destination Label
       desti_lbl = canvas.create_text(650,123,text="Destination",fill="white", font=("Helvatica",10))
       
-      # Destination Entry Box
-      self.desti_txt = tk.Entry(canvas)
+      # Destination Auto complete
+      self.desti_txt = AutocompleteCombobox(
+         canvas, 
+         width=30, 
+         font=('Helvatica', 10),
+         completevalues=list(self.graph.keys())
+         )
       self.desti_txt.place(x=700,y = 110, height=25,width=150)
        
    # Book Button
@@ -91,10 +102,13 @@ class Dashboard(tk.Frame):
       con.commit()
       cur.close()
       con.close()
-      #self.cleardata()
+      messagebox.showinfo("Book","Booked")
    
 # Calculation distance and price 
    def location(self,a,b):
+      if a == b:
+         return 0,0
+      
       work = [{'at':a,'route':[],'distance':0}]
       i = 0
       while i < len(work):
@@ -122,7 +136,7 @@ class Dashboard(tk.Frame):
       self.price_lbl.config(text= f'Rs {str(price)}')
    
 if __name__=="__main__":
-   app = dashboard()
+   app = Dashboard()
    app.mainloop()
 
     

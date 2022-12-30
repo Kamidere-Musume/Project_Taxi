@@ -111,6 +111,6 @@ class DriverDash(tk.Frame):
       
    
 if __name__=="__main__":
-   app = driverdash()
+   app = DriverDash()
    app.mainloop()
     
