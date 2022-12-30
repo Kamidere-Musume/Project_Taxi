@@ -2,16 +2,17 @@ import tkinter as tk
 from tkinter import *
 from help import absPath,dbcon
 from tkinter import ttk
+from tkinter import messagebox
 
-class driverdash(tk.Tk):
-#class driver_dash(tk.Frame):
-   def __init__(self):
-   #def __init__(self,parent,controller):
-      super().__init__()
-      #self.controller = controller
-      self.geometry("1045x800")
-      #self.resolution = "1000x800"
-      self.resizable(False,False)
+#class driverdash(tk.Tk):
+class DriverDash(tk.Frame):
+   #def __init__(self):
+   def __init__(self,parent,controller):
+      super().__init__(parent)
+      self.controller = controller
+      #self.geometry("1045x800")
+      self.resolution = "1000x800"
+      #self.resizable(False,False)
       self.title = "Driver"
 
       # Adding Background Image 
@@ -31,8 +32,7 @@ class driverdash(tk.Tk):
       self.frm.place(relx=.5,rely=.7, anchor="c")
       self.book_tbl = ttk.Treeview(self.frm, columns=(1,2,3,4,5,6,7,8,9,10), show="headings",height="10")
       self.book_tbl.pack()
-      self.book_tbl.bind("<Button-3>",self.popup)
-      
+
       # Adding scrollbar in tree view 
       self.scroll = ttk.Scrollbar(self.frm,orient="vertical",command= self.book_tbl.yview)
       self.scroll.place(x=1025, y = 25, height=200)
@@ -74,7 +74,7 @@ class driverdash(tk.Tk):
       show_btn.place(x=800, y=300, height=25, width=90)
 
       # Confirm Button
-      con_btn = tk.Button(canvas,text="Accept",command=self.confirm)
+      con_btn = tk.Button(canvas,text="Accept",command = self.accept)
       con_btn.place(x=800,y=400,height=25, width=90)
       
       
@@ -91,17 +91,25 @@ class driverdash(tk.Tk):
       for i in rows:
          self.book_tbl.insert('','end',values=i)
 
+   def accept(self):
+      a = self.book_tbl.selection()[0]
+      booking_id = self.book_tbl.item(a,"values")
+      
+      if booking_id[-1].strip() == "Accepted":
+         messagebox.showerror("Error","Already Accepted")
+         return
+         
+      con,cur = dbcon()
+      query = "update booking set Booking_Status = 'Accepted' where Booking_Id = %s"
+      value = tuple(booking_id[0])
+      cur.execute(query,value)
+      con.commit()
+      cur.close()
+      con.close()
    
-   '''def popup(self,e):
-      iid = self.tree.identify_row(e.y)
-      if iid:
-         self.tree.selection_set(iid)
-         self.contextMenu.post(e.x_root,e.y_root)
+      self.book_tbl.item(a,values=[*booking_id[:-1],"Accepted"])
       
-      else:
-         pass'''
-      
-      
+   
 if __name__=="__main__":
    app = driverdash()
    app.mainloop()

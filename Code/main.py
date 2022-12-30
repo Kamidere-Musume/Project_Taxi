@@ -1,8 +1,8 @@
 import tkinter as tk
 from login import Login
 from signup import Signup
-from booking import dashboard
-from driver_dash import driverdash
+from booking import Dashboard
+from driver_dash import DriverDash
 class MainApp(tk.Tk):
     user_id = None  
     def __init__(self):
@@ -17,7 +17,7 @@ class MainApp(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (Signup, Login,dashboard):
+        for F in (Signup, Login,Dashboard,DriverDash):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame

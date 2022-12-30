@@ -12,7 +12,7 @@ class Signup(tk.Frame):
         self.resolution = "772x960"
         self.title = "Sign Up"
         
-        # Adding background image
+    # Adding background image
         imagepath = absPath(__file__,"../pictures/register.png")
         bg = tk.PhotoImage(file=imagepath)
         canvas = tk.Canvas(self, width=772, height=975)
@@ -20,27 +20,35 @@ class Signup(tk.Frame):
         canvas.image = bg
         canvas.create_image(0, 0, image=bg, anchor="nw")
 
-        # First Name
+    # First Name
+        # First Name Label
         fname_lbl = canvas.create_text(200,170,text="First Name",fill="black",font=("Terminal", 12))
         
+        # First Name Entry Box
         self.fname_txt = tk.Entry(canvas)
         self.fname_txt.place(x=350, y=160, height=25, width=150)
         
-        # Last Name
+    # Last Name
+        # Last Name Label   
         lname_lbl = canvas.create_text(200,220,text="Last Name",fill="black",font=("Terminal", 12))
 
+        # Last Name Entry Box
         self.lname_txt = tk.Entry(canvas)
         self.lname_txt.place(x=350, y=210, height=25, width=150)
         
-        # Email
+    # Email
+        # Email Label
         email_lbl = canvas.create_text(200,270,text="Email",fill="black",font=("Terminal", 12))
 
+        # Email Entry Box
         self.email_txt = tk.Entry(canvas)
         self.email_txt.place(x=350, y=260, height=25, width=150)
 
-        # Password
+    # Password
+        # Password Label
         pass_lbl = canvas.create_text(200,320,text="Password",fill="black",font=("Terminal", 12))
         
+        # Password Entry Box
         self.pass_txt = tk.Entry(canvas)
         self.pass_txt.place(x=350, y=310, height=25, width=150)
 
