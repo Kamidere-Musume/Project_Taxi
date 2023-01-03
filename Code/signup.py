@@ -141,8 +141,8 @@ class Signup(tk.Frame):
         else:
             if self.user_box.get()=="Driver":
                 con,cur = dbcon()
-                query = "insert into driver (Driver_Id,Driver_Fname,Driver_Lname,Driver_Email,Driver_Phone_Number,Driver_Password,Vehicle_Id,Driver_Address) values (%s,%s,%s,%s,%s,%s,%s,%s)"
-                values = (0,self.fname_txt.get(),self.lname_txt.get(),self.email_txt.get(),self.phone_txt.get(),self.pass_txt.get(),self.vechile_txt.get(),self.address_txt.get())
+                query = "insert into driver (Driver_Id,Driver_Fname,Driver_Lname,Driver_Email,Driver_Phone_Number,Driver_Password,Vehicle_Id,Driver_Address,Assign_Status) values (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                values = (0,self.fname_txt.get(),self.lname_txt.get(),self.email_txt.get(),self.phone_txt.get(),self.pass_txt.get(),self.vechile_txt.get(),self.address_txt.get(),False)
                 cur.execute(query,values)
                 con.commit()
                 cur.close()
