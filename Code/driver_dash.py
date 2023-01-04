@@ -4,16 +4,16 @@ from help import absPath,dbcon
 from tkinter import ttk
 from tkinter import messagebox
 
-class driverdash(tk.Tk):
-#class DriverDash(tk.Frame):
-   def __init__(self):
-   #def __init__(self,parent,controller):
-      super().__init__()
-      #self.controller = controller
-      self.geometry("1045x800")
-     # self.resolution = "1000x800"
+#class DriverDash(tk.Tk):
+class DriverDash(tk.Frame):
+   #def __init__(self):
+   def __init__(self,parent,controller):
+      super().__init__(parent)
+      self.controller = controller
+      #self.geometry("1045x800")
+      self.resolution = "1000x800"
       #self.resizable(False,False)
-      self.title("Driver")
+      self.title="Driver"
 
       # Adding Background Image 
        # Adding background image 
@@ -111,6 +111,6 @@ class driverdash(tk.Tk):
       
    
 if __name__=="__main__":
-   app = driverdash()
+   app = DriverDash()
    app.mainloop()
     

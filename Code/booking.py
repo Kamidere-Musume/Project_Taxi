@@ -7,11 +7,11 @@ import csv
 from ttkwidgets.autocomplete import AutocompleteCombobox
 from tkcalendar import DateEntry
 from datetime import date
-class Dashboard(tk.Tk):
-#class Dashboard(tk.Frame):
+#class Dashboard(tk.Tk):
+class Dashboard(tk.Frame):
    graph = dict()
-   def __init__(self):
-   #def __init__(self,parent,controller):
+   #def __init__(self):
+   def __init__(self,parent,controller):
       
       # Adding Locations 
       def addLocation(a, b, distance):
@@ -27,12 +27,12 @@ class Dashboard(tk.Tk):
             addLocation(a, b, int(row[1]))
             addLocation(b, a, int(row[1]))
                
-      super().__init__()
-      #self.controller = controller
-      self.geometry("900x800")
-      #self.resolution = "1000x800"
+      super().__init__(parent)
+      self.controller = controller
+      #self.geometry("900x800")
+      self.resolution = "1000x800"
       #self.resizable(False,False)
-      #self.title = "Dashboard"
+      self.title = "Dashboard"
         
    # Adding background image 
       imagepath = absPath(__file__,"../pictures/grey.png")

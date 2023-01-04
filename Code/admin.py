@@ -27,28 +27,26 @@ class AdminDash(tk.Tk):
     # Title 
         title_lbl = canvas.create_text(450,50,text="Admin",fill="white",font=("Helvatica",15))
 
-    # Search Box
-        # customerlistorary Text
-        def temp_text(e):
-            self.search_txt.delete(0,"end")
-            
-        # Search Entry Box
-        self.search_txt = tk.Entry(canvas)
-        self.search_txt.place(x=350, y=510,height=25,width=150)
-        self.search_txt.insert(0,"Search")
-        self.search_txt.bind("<FocusIn>",temp_text)
-        self.search_txt.place(x=350,y=200, height=25, width=140)
-             
     # Customer Search Button
-        self.usersearch_btn = tk.Button(canvas,text="User list",command= self.customerlist)
-        self.usersearch_btn.place(x=500,y=200,height=25,width=60)
+        self.cuslist_btn = tk.Button(canvas,text="User list",command= self.customerlist)
+        self.cuslist_btn.place(x=30,y=300,height=80,width=100)
     
-     # Complete Button
-        self.complete_btn = tk.Button(canvas,text="Complete",command=self.complete)
-        self.complete_btn.place(x=200,y=200)
+     # Driver search Button
+        self.drivlist_btn = tk.Button(canvas,text="Driver List",command=self.driverlist)
+        self.drivlist_btn.place(x=30,y=400,height=80,width=100)
+               
+    # Booking List Button
+        self.bookinglist_btn = tk.Button(canvas,text="User list",command= self.bookinglist)
+        self.bookinglist_btn.place(x=30,y=500,height=80,width=100)
+    
+     # Booking Assign Button
+        self.bookassign_btn = tk.Button(canvas,text="Complete",command=self.complete)
+        self.bookassign_btn.place(x=30,y=600,height=80,width=100)
         
-# Top level for customer list 
-    def customerlist(self):
+     
+        
+# Top level for bookinglist
+    def bookinglist(self):
         win = tk.Toplevel(self)
         win.geometry("1045x800")
         win.title("Customer")
@@ -57,10 +55,8 @@ class AdminDash(tk.Tk):
         list2 = ["Booking ID","User ID","User First Name","User Last Name","User Phone Number","Current Location","Destination","Price","Distance","Booking Status"]
         data2 = "select booking.Booking_Id,user.User_Id,user.User_fname, user.User_lname, user.User_phone_Number,booking.Current_location,booking.Destination,booking.Price,booking.Distance,booking.Booking_Status From booking inner join user on User.User_Id = booking.User_Id where Booking_Status = 'Pending'"
 
-   
-        
     # Assign Button
-        self.assin_btn = tk.Button(win,text="Assign",command = self.driverlist)
+        self.assin_btn = tk.Button(win,text="Assign",command = self.bookingassign)
         self.assin_btn.place(x=200,y=300)
         
     # Frame and Treeview    
@@ -69,7 +65,6 @@ class AdminDash(tk.Tk):
 
         self.frm.place(relx=.5,rely=.7, anchor="c")
         self.book_tbl.pack()
-        
         
         for i in list2:
             self.book_tbl.column(i,stretch=NO,width=100)
@@ -85,8 +80,8 @@ class AdminDash(tk.Tk):
             self.book_tbl.insert('','end',values=i)
 
         
-# Top Level For Driver List 
-    def driverlist(self):
+# Top Level For Booking Assign 
+    def bookingassign(self):
         
     # Data selection for customer    
         a = self.book_tbl.selection()[0]
@@ -111,7 +106,6 @@ class AdminDash(tk.Tk):
         self.frm.place(relx=.5,rely=.7, anchor="c")
         self.driverbook_tbl.pack()
         
-        
         for i in list1:
             self.driverbook_tbl.column(i,stretch=NO,width=100)
             self.driverbook_tbl.heading(i,text=i)
@@ -126,24 +120,6 @@ class AdminDash(tk.Tk):
         for i in rows:
             self.driverbook_tbl.insert('','end',values=i)
 
-# Action: Accepting booking
-    def accept(self,booking_id,win):
-        a = self.driverbook_tbl.selection()[0]
-        driver_id = self.driverbook_tbl.item(a,"values")[0]
-        
-        query = "update booking set Booking_Status = 'Accepted',Driver_Id = %s where Booking_Id = %s"
-        query1 = "update driver set Assign_Status = 1 where Driver_Id = %s"
-        values = (driver_id,booking_id[0])
-        print(values)
-        
-        con,cur = dbcon()
-        cur.execute(query,values)
-        cur.execute(query1,tuple(driver_id))
-        con.commit()
-        cur.close()
-        con.close()
-        win.destroy()        
-        self.book_tbl.item(a,values=[*booking_id[:-1],"Accepted"])
 
 # Top level for complete
     def complete(self):
@@ -179,6 +155,153 @@ class AdminDash(tk.Tk):
         for i in rows:
             self.complete_tbl.insert('','end',values=i)
 
+
+# Top level for customer list
+    def customerlist(self):
+    
+        win = tk.Toplevel(self)
+        win.geometry("1045x800")
+        win.title("Assigned")
+        
+ # Search Box
+        # customerlistorary Text
+        def temp_text(e):
+            self.search_txt.delete(0,"end")
+            
+        # Search Entry Box
+        self.search_txt = tk.Entry(win)
+        self.search_txt.place(x=350, y=510,height=25,width=150)
+        self.search_txt.insert(0,"Search")
+        self.search_txt.bind("<FocusIn>",temp_text)
+        self.search_txt.place(x=350,y=200, height=25, width=140)   
+        
+    # Search Button 
+        search_btn = tk.Button(win,text="Search",command=self.custsearch)
+        search_btn.place(x=200,y=200)
+        
+        list1 = ["CustomerID","Customer First Name","Customer Last Name","Customer Phone Number","Custome Address","Payment Method","Customer Email","Customer Password"]
+        data1 = "select User_Id,User_Fname,User_Lname,User_Phone_Number,User_Address,Payment_Method,User_Email,User_Password from user"
+ # Frame and Treeview    
+        self.frm = tk.Frame(win, width=500,height=200,background="bisque")
+        self.complete_tbl = ttk.Treeview(self.frm,columns = list1, show="headings",height="10",)
+
+        self.frm.place(relx=.5,rely=.7, anchor="c")
+        self.complete_tbl.pack()
+        
+        
+        for i in list1:
+            self.complete_tbl.column(i,stretch=NO,width=80)
+            self.complete_tbl.heading(i,text=i)        
+        
+        con,cur = dbcon()
+        cur.execute(data1)
+        rows = cur.fetchall()
+        cur.close()
+        con.close()
+      
+        for i in rows:
+            self.complete_tbl.insert('','end',values=i)
+            
+
+# Top level for Driver list
+    def driverlist(self):
+    
+        win = tk.Toplevel(self)
+        win.geometry("1045x800")
+        win.title("Assigned")
+        
+ # Search Box
+        # customerlistorary Text
+        def temp_text(e):
+            self.search_txt1.delete(0,"end")
+            
+        # Search Entry Box
+        self.search_txt1 = tk.Entry(win)
+        self.search_txt1.place(x=350, y=510,height=25,width=150)
+        self.search_txt1.insert(0,"Search")
+        self.search_txt1.bind("<FocusIn>",temp_text)
+        self.search_txt1.place(x=350,y=200, height=25, width=140)
+        
+    # Complete Button 
+        com_btn = tk.Button(win,text="Complete",command=self.finish)
+        com_btn.place(x=200,y=200)
+        
+        list1 = ["Driver ID","Driver First Name","Driver Last Name","Driver Phone Number","Vehicle ID","Driver Address","Driver Email","Driver Password"]
+        data1 = "select Driver_Id,Driver_Fname,Driver_Lname,Driver_Phone_Number,Vehicle_Id,Driver_Address,Driver_Email,Driver_Password from driver"
+        
+ # Frame and Treeview    
+        self.frm = tk.Frame(win, width=500,height=200,background="bisque")
+        self.complete_tbl = ttk.Treeview(self.frm,columns = list1, show="headings",height="10",)
+
+        self.frm.place(relx=.5,rely=.7, anchor="c")
+        self.complete_tbl.pack()
+        
+        
+        for i in list1:
+            self.complete_tbl.column(i,stretch=NO,width=80)
+            self.complete_tbl.heading(i,text=i)        
+        
+        con,cur = dbcon()
+        cur.execute(data1)
+        rows = cur.fetchall()
+        cur.close()
+        con.close()
+      
+        for i in rows:
+            self.complete_tbl.insert('','end',values=i)
+
+# Top level for customer search
+    def custsearch(self):
+        
+        win = tk.Toplevel(self)
+        win.geometry("1045x800")
+        win.title("Assigned")
+        
+        list1 = ["CustomerID","Customer First Name","Customer Last Name","Customer Phone Number","Custome Address","Payment Method","Customer Email","Customer Password"]
+        data1 = "select * from user where User_Id = %s"
+        values = tuple(self.search_txt.get())
+        
+ # Frame and Treeview    
+        self.frm = tk.Frame(win, width=500,height=200,background="bisque")
+        self.complete_tbl = ttk.Treeview(self.frm,columns = list1, show="headings",height="10",)
+
+        self.frm.place(relx=.5,rely=.7, anchor="c")
+        self.complete_tbl.pack()
+        
+        
+        for i in list1:
+            self.complete_tbl.column(i,stretch=NO,width=100)
+            self.complete_tbl.heading(i,text=i)        
+        
+        con,cur = dbcon()
+        cur.execute(data1,values)
+        rows = cur.fetchall()
+        cur.close()
+        con.close()
+      
+        for i in rows:
+            self.complete_tbl.insert('','end',values=i)
+
+# Action: Accepting booking
+    def accept(self,booking_id,win,a):
+        a = self.driverbook_tbl.selection()[0]
+        driver_id = self.driverbook_tbl.item(a,"values")[0]
+        
+        query = "update booking set Booking_Status = 'Accepted',Driver_Id = %s where Booking_Id = %s"
+        query1 = "update driver set Assign_Status = 1 where Driver_Id = %s"
+        values = (driver_id,booking_id[0])
+        print(values)
+        
+        con,cur = dbcon()
+        cur.execute(query,values)
+        cur.execute(query1,tuple(driver_id))
+        con.commit()
+        cur.close()
+        con.close()
+        win.destroy()        
+        self.book_tbl.item(a,values=[*booking_id[:-1],"Accepted"])
+
+
 # Action: Completing the trip    
     def finish(self):
         con,cur = dbcon()
@@ -200,8 +323,15 @@ class AdminDash(tk.Tk):
         con.close()
 
     
-    
-    
+    def customerdata (self):
+        con,cur = dbcon()
+        query = "select * from user where User_Id = %s"
+        values = (self.search_txt.get()) 
+        cur.execute(query,values)
+        con.commit
+        cur.close()
+        con.close()
+        
 if __name__ == "__main__":
     app = AdminDash()
     app.mainloop()
