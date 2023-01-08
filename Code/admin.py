@@ -36,12 +36,16 @@ class AdminDash(tk.Tk):
         self.drivlist_btn.place(x=30,y=400,height=80,width=100)
                
     # Booking List Button
-        self.bookinglist_btn = tk.Button(canvas,text="User list",command= self.bookinglist)
+        self.bookinglist_btn = tk.Button(canvas,text="Booking list",command= self.bookinglist)
         self.bookinglist_btn.place(x=30,y=500,height=80,width=100)
     
      # Booking Assign Button
-        self.bookassign_btn = tk.Button(canvas,text="Complete",command=self.complete)
+        self.bookassign_btn = tk.Button(canvas,text="Complete",command=self.history)
         self.bookassign_btn.place(x=30,y=600,height=80,width=100)
+    
+    # Revenue Button
+        self.revenue_btn = tk.Button(canvas,text="Revenue",command=self.revenue)
+        self.revenue_btn.place(x=30,y=700,height=80,width=100)
         
      
         
@@ -190,7 +194,7 @@ class AdminDash(tk.Tk):
         
         
         for i in list1:
-            self.complete_tbl.column(i,stretch=NO,width=80)
+            self.complete_tbl.column(i,stretch=NO,width=115)
             self.complete_tbl.heading(i,text=i)        
         
         con,cur = dbcon()
@@ -222,9 +226,9 @@ class AdminDash(tk.Tk):
         self.search_txt1.bind("<FocusIn>",temp_text)
         self.search_txt1.place(x=350,y=200, height=25, width=140)
         
-    # Complete Button 
-        com_btn = tk.Button(win,text="Complete",command=self.finish)
-        com_btn.place(x=200,y=200)
+    # Search Button 
+        search_btn = tk.Button(win,text="Search",command=self.drivesearch)
+        search_btn.place(x=200,y=200)
         
         list1 = ["Driver ID","Driver First Name","Driver Last Name","Driver Phone Number","Vehicle ID","Driver Address","Driver Email","Driver Password"]
         data1 = "select Driver_Id,Driver_Fname,Driver_Lname,Driver_Phone_Number,Vehicle_Id,Driver_Address,Driver_Email,Driver_Password from driver"
@@ -238,7 +242,7 @@ class AdminDash(tk.Tk):
         
         
         for i in list1:
-            self.complete_tbl.column(i,stretch=NO,width=80)
+            self.complete_tbl.column(i,stretch=NO,width=115)
             self.complete_tbl.heading(i,text=i)        
         
         con,cur = dbcon()
@@ -252,42 +256,38 @@ class AdminDash(tk.Tk):
 
 # Top level for customer search
     def custsearch(self):
-        
-        win = tk.Toplevel(self)
-        win.geometry("1045x800")
-        win.title("Assigned")
-        
-        list1 = ["CustomerID","Customer First Name","Customer Last Name","Customer Phone Number","Custome Address","Payment Method","Customer Email","Customer Password"]
-        data1 = "select * from user where User_Id = %s"
-        values = tuple(self.search_txt.get())
-        
- # Frame and Treeview    
-        self.frm = tk.Frame(win, width=500,height=200,background="bisque")
-        self.complete_tbl = ttk.Treeview(self.frm,columns = list1, show="headings",height="10",)
+        items = self.complete_tbl.get_children()
+        for item in items:
+            custid = self.complete_tbl.item(item,"values")[0]
+            custemail = self.complete_tbl.item(item,"values")[6]
+            if custid == self.search_txt.get() or custemail == self.search_txt.get():
+                self.complete_tbl.selection_set(item)
+                break
+            else:
+                self.complete_tbl.selection_remove(item)
 
-        self.frm.place(relx=.5,rely=.7, anchor="c")
-        self.complete_tbl.pack()
-        
-        
-        for i in list1:
-            self.complete_tbl.column(i,stretch=NO,width=100)
-            self.complete_tbl.heading(i,text=i)        
-        
-        con,cur = dbcon()
-        cur.execute(data1,values)
-        rows = cur.fetchall()
-        cur.close()
-        con.close()
-      
-        for i in rows:
-            self.complete_tbl.insert('','end',values=i)
+        else:
+            messagebox.showinfo("Info","User doesnot exist")
+            
+    def drivesearch(self):
+        items = self.complete_tbl.get_children()
+        for item in items:
+            custid = self.complete_tbl.item(item,"values")[0]
+            custemail = self.complete_tbl.item(item,"values")[6]
+            if custid == self.search_txt1.get() or custemail == self.search_txt1.get():
+                self.complete_tbl.selection_set(item)
+                break
+            else:
+                self.complete_tbl.selection_remove(item)
 
+        else:
+            messagebox.showinfo("Info","Driver doesnot exist")
 # Action: Accepting booking
     def accept(self,booking_id,win,a):
         a = self.driverbook_tbl.selection()[0]
         driver_id = self.driverbook_tbl.item(a,"values")[0]
         
-        query = "update booking set Booking_Status = 'Accepted',Driver_Id = %s where Booking_Id = %s"
+        query = "update booking set Booking_Status = 'Assigned',Driver_Id = %s where Booking_Id = %s"
         query1 = "update driver set Assign_Status = 1 where Driver_Id = %s"
         values = (driver_id,booking_id[0])
         print(values)
@@ -302,27 +302,25 @@ class AdminDash(tk.Tk):
         self.book_tbl.item(a,values=[*booking_id[:-1],"Accepted"])
 
 
-# Action: Completing the trip    
-    def finish(self):
+# Action: History
+    def history(self):
         con,cur = dbcon()
-        query = "update driver set Assign_Status = 0 where Driver_Id = %s"
-        query2 = "select Price from booking where Driver_Id = %s"
-        query1 = "delete from booking where Driver_Id = %s"
-        a = self.complete_tbl.selection()[0]
-        driver_id = self.complete_tbl.item(a,"values")[0]
-        values = tuple(driver_id)
-        cur.execute(query2,values)
-        price = cur.fetchone()[0]
-        query3 = "insert into revenue(Revenue_Id,revenue) values (%s,%s)"
-        cur.execute(query3,(0,price))
-        cur.execute(query1,values)
-        print(price)
-        cur.execute(query,values)
-        con.commit()
+        query = "select * from booking where Booking_Status = 'Completed'"
+        cur.execute(query)
+        cur.fetchall()
         cur.close()
         con.close()
-
-    
+       
+# Revenue 
+    def revenue(self):
+        con,cur = dbcon()
+        query = "select Price from booking where Booking_Status = 'Completed'"
+        cur.execute(query)
+        price = cur.fetchall()
+        cur.close()
+        con.close()
+        total = sum([int(i[0][3:].strip()) for i in price])
+        
     def customerdata (self):
         con,cur = dbcon()
         query = "select * from user where User_Id = %s"
