@@ -11,7 +11,7 @@ class Login(tk.Frame):
         self.title= "Login"
         
     # Adding background image
-        imagepath = absPath(__file__,"../pictures/login.png")
+        imagepath = absPath(__file__,"../pictures/.png")
         bg = tk.PhotoImage(file=imagepath)
         canvas = tk.Canvas(self, width=802, height=887)
         canvas.pack(fill="both", expand=True)
@@ -97,7 +97,7 @@ class Login(tk.Frame):
                         messagebox.showerror("Error","Email or Password incorrect")
                     
                     elif len(myresult)>0:
-                        self.controller.driver_id = myresult[0]
+                        self.controller.user_id = myresult[0][0]
                         self.controller.show_frame("DriverDash")
             
             cur.close()
