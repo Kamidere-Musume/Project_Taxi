@@ -3,26 +3,29 @@ from help import absPath,dbcon
 from tkinter import messagebox
 from tkinter import ttk
 import re
-from login import Login
 
 class Signup(tk.Frame):
+    
     def __init__(self, parent, controller):
+        
         super().__init__(parent)
         self.controller = controller
-        self.resolution = "772x960"
+        self.resolution = "700x800"
         self.title = "Sign Up"
         
     # Adding background image
-        imagepath = absPath(__file__,"../pictures/register.png")
+        imagepath = absPath(__file__,"../pictures/sign up1.png")
         bg = tk.PhotoImage(file=imagepath)
         canvas = tk.Canvas(self, width=772, height=975)
         canvas.pack(fill="both", expand=True)
         canvas.image = bg
         canvas.create_image(0, 0, image=bg, anchor="nw")
 
+  # Title
+        title_lbl = canvas.create_text(350,40,text="Sign Up",fill="black",font=("Century", 25,"bold"))
     # First Name
         # First Name Label
-        fname_lbl = canvas.create_text(200,170,text="First Name",fill="black",font=("Terminal", 12))
+        fname_lbl = canvas.create_text(200,170,text="First Name",fill="black",font=("Century", 12))
         
         # First Name Entry Box
         self.fname_txt = tk.Entry(canvas)
@@ -52,29 +55,35 @@ class Signup(tk.Frame):
         self.pass_txt = tk.Entry(canvas)
         self.pass_txt.place(x=350, y=310, height=25, width=150)
 
-        #Confirm password 
+    #Confirm password
+        # Confirm Password Label 
         conpass_lbl = canvas.create_text(200,375,text="Confirm password",fill="black",font=("Terminal", 12))
         
+    # Confirm Password Entry Box
         self.conpass_txt = tk.Entry(canvas)
         self.conpass_txt.place(x=350,y=360,height=25,width=150)
         
-        # Address
+    # Address
+        # Address Label
         address_lbl = canvas.create_text(200,425,text="Address",fill="black",font=("Terminal", 12))
         
+        # Address Entry Box
         self.address_txt = tk.Entry(canvas)
         self.address_txt.place(x=350,y=410, height=25, width=150)
         
-        # User Type
-        
+    # User Type
+        # User Label
         user_lbl = canvas.create_text(200,575,text="User Type",fill="black",font=("Terminal", 12))
+        
+        # User ComboBox
         self.user_box = ttk.Combobox(canvas,state="readonly",
         values=["Customer","Driver"])
         self.user_box.place(x=350, y= 560,height=25,width=150)
         
-        # Payment Method
+    # Payment Method
         payment_lbl = canvas.create_text(200,475,text="Payment method",fill="black",font=("Terminal", 12))
 
-        # Adding background text 
+    # Adding background text 
         def temp_text(e):
             self.payment_txt.delete(0,"end")
             
@@ -83,29 +92,28 @@ class Signup(tk.Frame):
         self.payment_txt.bind("<FocusIn>",temp_text)
         self.payment_txt.place(x=350,y=460, height=25, width=150)
           
-        # Phone number
+    # Phone number
         phone_lbl = canvas.create_text(200,525,text="Phone No",fill="black",font=("Terminal", 12))
 
         self.phone_txt = tk.Entry(canvas)
         self.phone_txt.place(x=350, y=510,height=25,width=150)
         
-        # Vehcile Number 
+    # Vehcile Number 
         vechile_lbl = canvas.create_text(200,625,text="Vehcile ID",fill="black",font=("Terminal", 12))
         
         self.vechile_txt = tk.Entry(canvas)
         self.vechile_txt.place(x=350,y=610,height=25,width=150)
         
-        # Login Button
+    # Login Button
         sign_btn = tk.Button(canvas, text="Sign Up",command=self.signupdb)
         sign_btn.place(x=360, y=660, height=30, width=80)
         
-        # Back button 
+    # Back button 
         back_btn = tk.Button(canvas, text="Back",command=lambda: controller.show_frame("Login"))
         back_btn.place(x=25,y=30,height=30,width=60)
         
         
-        
-        
+    
     def signupdb(self):
         
     # Validation
@@ -150,6 +158,7 @@ class Signup(tk.Frame):
                 self.cleardata()
                 self.controller.show_frame("Login")
             else:
+                
         #Database Connection
                 con,cur = dbcon()
                 query = "insert into user (User_Id,User_Fname,User_Lname,User_Address,User_Email,User_Phone_Number,Payment_Method,User_Password) values (%s,%s,%s,%s,%s,%s,%s,%s)"
@@ -161,6 +170,7 @@ class Signup(tk.Frame):
                 self.cleardata()
                 self.controller.show_frame("Login")
         
+# Clearing Data in table
     def cleardata(self):
         self.fname_txt.delete(0,tk.END)
         self.lname_txt.delete(0,tk.END)
