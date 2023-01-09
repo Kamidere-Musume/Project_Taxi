@@ -4,34 +4,32 @@ from help import absPath,dbcon
 from tkinter import ttk
 from tkinter import messagebox
 
-#class DriverDash(tk.Tk):
+
 class DriverDash(tk.Frame):
-   #def __init__(self):
-   def __init__(self,parent,controller):
-      
+   
+   def __init__(self,parent,controller):    
+        
       super().__init__(parent)
       self.controller = controller
-      #self.geometry("1045x800")
-      self.resolution = "1000x800"
-      #self.resizable(False,False)
+      self.resolution = "1000x500"
       self.title="Driver"
 
-      # Adding Background Image 
-       # Adding background image 
-      imagepath = absPath(__file__,"../pictures/wall3.png")
+   # Adding Background Image     
+      imagepath = absPath(__file__,"../pictures/booking1.png")
       bg = tk.PhotoImage(file=imagepath)
-      canvas = tk.Canvas(self, width=1000, height=800)
+      canvas = tk.Canvas(self, width=1010, height=800)
       canvas.pack(fill="both", expand=True)
       canvas.image = bg
       canvas.create_image(0, 0, image=bg, anchor="nw")
       
-      # Adding title 
-      title_lbl = canvas.create_text(500,100,text="Booking Requests",fill="white",font=("Helvatica",15))
+   # Adding title 
+      title_lbl = canvas.create_text(500,100,text="Booking Requests",fill="black",font=("Century",25))
       
-      # Adding Frame and tree view
-      self.frm = tk.Frame(canvas, width=1045,height=500,background="bisque")
-      self.frm.place(relx=.5,rely=.7, anchor="c")
+   # Adding Frame and tree view
+      self.frm = tk.Frame(canvas, width=1045,height=800,background="bisque")
+      self.frm.place(relx=.5,rely=.8, anchor="c")
       
+   # list for Table
       list1 = ["Booking ID","User ID","First Name","Last Name","Phone Number","Pick Up","Drop","Price","Distance","Booking Status"]  
       self.book_tbl = ttk.Treeview(self.frm,columns = list1, show="headings",height="10",)
       self.book_tbl.pack()
@@ -40,14 +38,16 @@ class DriverDash(tk.Frame):
          self.book_tbl.column(i,stretch=NO,width=100)
          self.book_tbl.heading(i,text=i)
          
-      # Creating Button 
+    # Creating Button 
       show_btn  = tk.Button(canvas, text="Show Requests",command=self.show)
-      show_btn.place(x=800, y=300, height=25, width=90)
+      show_btn.place(x=700, y=200, height=30, width=90)
 
-      # Complete Button 
+   # Complete Button 
       com_btn = tk.Button(canvas,text="Complete",command=self.complete)
-      com_btn.place(x=800,y=200,height=25, width=90)
-      
+      com_btn.place(x=800,y=200,height=30, width=90)
+   
+   
+# Showing data in table    
    def show(self):
       print(self.controller.user_id)
       data1 =  "select booking.Booking_Id,user.User_Id,user.User_fname, user.User_lname, user.User_phone_Number,booking.Current_location,booking.Destination,booking.Price,booking.Distance,booking.Booking_Status From booking inner join user on User.User_Id = booking.User_Id where Driver_Id = %s and Booking_Status = 'Assigned'";
@@ -59,7 +59,9 @@ class DriverDash(tk.Frame):
       
       for i in rows:
             self.book_tbl.insert('','end',values=i)
-      
+    
+    
+# Completing data in table  
    def complete(self):
       con,cur = dbcon()
       query = "update driver set Assign_Status = 0 where Driver_Id = %s"
@@ -75,10 +77,3 @@ class DriverDash(tk.Frame):
       cur.close()
       con.close()
       
-      
-      
-      
-if __name__=="__main__":
-   app = DriverDash()
-   app.mainloop()
-    
