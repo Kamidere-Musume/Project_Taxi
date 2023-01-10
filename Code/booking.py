@@ -131,15 +131,17 @@ class Dashboard(tk.Frame):
    #Tree View for the customer booking 
       # List of data for table
       list1 = ["User ID","Booking ID","User First Name","User Last Name","Current Location","Destination","Pick Up Date","Pick Up Time","Price","Distance","Booking Status"]   
-      data1 = "select user.User_Id,booking.Booking_Id,user.User_fname, user.User_lname,booking.Current_location,booking.Destination,booking.Pickup_Date,booking.Pickup_Time,booking.Price,booking.Distance,booking.Booking_Status From booking inner join user on User.User_Id = booking.User_Id;"
-      
+     
       self.complete_tbl = ttk.Treeview(frame,columns = list1, show="headings",height="18")
       self.complete_tbl.pack()
           
       for i in list1:
          self.complete_tbl.column(i,stretch=NO,width=100)
          self.complete_tbl.heading(i,text=i)        
-        
+      
+      self.show()    
+   def show(self):
+      data1 = "select user.User_Id,booking.Booking_Id,user.User_fname, user.User_lname,booking.Current_location,booking.Destination,booking.Pickup_Date,booking.Pickup_Time,booking.Price,booking.Distance,booking.Booking_Status From booking inner join user on User.User_Id = booking.User_Id;" 
       con,cur = dbcon()
       cur.execute(data1)
       rows = cur.fetchall()
@@ -185,7 +187,12 @@ class Dashboard(tk.Frame):
       self.dis_lbl.config(text= f'{str(distance)} Km')
       self.price_lbl.config(text= f'Rs {str(price)}')
    
-      
+
+# Clearing Treeview
+   def clear_all(self):
+      for item in self.complete_tbl.get_children():
+         self.complete_tbl.delete(item)
+         
 # Database Connection  
    # Booking
    def bookingdb(self):
@@ -196,9 +203,9 @@ class Dashboard(tk.Frame):
       con.commit()
       cur.close()
       con.close()
+      self.clear_all()
+      self.show()
       messagebox.showinfo("Book","Booked")
-      self.complete_tbl(values=[self.start_txt.get(),self.desti_txt.get(),self.date_txt.get(),self.time_txt.get(),self.price_lbl.cget("text"),self.dis_lbl.cget("text"),"Accepted"])
-
 
    # Showing value
    def showvalue(self,event):
@@ -223,19 +230,21 @@ class Dashboard(tk.Frame):
     
     
 # Cancel Booking
-   def cancel(self,a,booking_id):
-      a = self.driverbook_tbl.selection()[0]
-      driver_id = self.driverbook_tbl.item(a,"values")[0]
+   def cancel(self):
+      a = self.complete_tbl.selection()[0]
+      driver_id = self.complete_tbl.item(a,"values")[1]
       
       con,cur = dbcon()
-      query = "delete * from booking where Booking_id = %s"
-      values = (driver_id,booking_id[0])
+      query = "delete from booking where Booking_id = %s"
+      values = tuple(driver_id)
       
       cur.execute(query,values)
       con.commit()
       cur.close()
       con.close()
-      messagebox.showinfo("Book","Booked")
+      self.clear_all()
+      self.show()
+      messagebox.showinfo("Delete","Booking Deleted")
 
 
       
