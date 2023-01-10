@@ -46,10 +46,18 @@ class DriverDash(tk.Frame):
       com_btn = tk.Button(canvas,text="Complete",command=self.complete)
       com_btn.place(x=800,y=200,height=30, width=90)
    
+   # Exit Button
+      exit_btn = tk.Button(canvas,text="Logout",command=lambda:self.destroy())
+      exit_btn.place(x=900,y=10,height=30, width=90)
    
+ #Clearing Treeview
+   def clear_all(self):
+      for item in self.book_tbl.get_children():
+         self.book_tbl.delete(item)
+         
 # Showing data in table    
    def show(self):
-      print(self.controller.user_id)
+
       data1 =  "select booking.Booking_Id,user.User_Id,user.User_fname, user.User_lname, user.User_phone_Number,booking.Current_location,booking.Destination,booking.Price,booking.Distance,booking.Booking_Status From booking inner join user on User.User_Id = booking.User_Id where Driver_Id = %s and Booking_Status = 'Assigned'";
       con,cur = dbcon()
       cur.execute(data1,tuple(str(self.controller.user_id)))
@@ -63,17 +71,23 @@ class DriverDash(tk.Frame):
     
 # Completing data in table  
    def complete(self):
+      
       con,cur = dbcon()
+      print(self.controller.user_id)
       query = "update driver set Assign_Status = 0 where Driver_Id = %s"
+      values1 = tuple(str(self.controller.user_id))
+      
       query1 = "update booking set Booking_Status = 'Completed' where Booking_Id = %s"
       a = self.book_tbl.selection()[0]
       booking_id = self.book_tbl.item(a,"values")[0]
       values = tuple(booking_id)
       
-      cur.execute(query,values)
+      cur.execute(query,values1)
       cur.execute(query1,values)
    
       con.commit()
       cur.close()
       con.close()
-      
+      self.clear_all()
+      self.show()
+      messagebox.showinfo("Info","Completed")

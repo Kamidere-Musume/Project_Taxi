@@ -36,7 +36,7 @@ class AdminDash(tk.Tk):
         self.bookinglist_btn = tk.Button(canvas,text="Booking list",command= self.bookinglist,background="#CCCCFF")
         self.bookinglist_btn.place(x=390,y=700,height=80,width=100)
     
-     # Booking Assign Button
+     # Histor Button
         self.history_btn = tk.Button(canvas,text="History",command=self.history,background="#CCCCFF")
         self.history_btn.place(x=510,y=700,height=80,width=100)
     
@@ -47,7 +47,7 @@ class AdminDash(tk.Tk):
     # Exit Buttone
         self.exit_btn = tk.Button(canvas,text="Exit",command= lambda: self.destroy() ,background="#CCCCFF")
         self.exit_btn.place(x=750,y=700,height=80,width=100)
-    
+
         
 # Top level for customer list
     def customerlist(self):
@@ -315,13 +315,8 @@ class AdminDash(tk.Tk):
         for i in list1:
             self.complete_tbl.column(i,stretch=NO,width=115)
             self.complete_tbl.heading(i,text=i)        
-        
-        con,cur = dbcon()
-        cur.execute(data1)
-        rows = cur.fetchall()
-        cur.close()
-        con.close()
-      
+       
+        rows = self.historydb()
         for i in rows:
             self.complete_tbl.insert('','end',values=i)       
             
@@ -383,10 +378,11 @@ class AdminDash(tk.Tk):
         con,cur = dbcon()
         query = "select * from booking where Booking_Status = 'Completed'"
         cur.execute(query)
-        cur.fetchall()
+        data =  cur.fetchall()
         cur.close()
         con.close()
-       
+        return data
+    
 # Action: Revenue 
     def revenue(self):
         con,cur = dbcon()
