@@ -87,6 +87,7 @@ class Login(tk.Frame):
                     
                     elif len(myresult)>0:
                         self.controller.user_id = myresult[0][0]
+                        messagebox.showinfo("Info","Logged in Sucessful")
                         self.controller.show_frame("Dashboard")
                 
             # Driver Dashboard

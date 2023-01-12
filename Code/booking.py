@@ -230,12 +230,14 @@ class Dashboard(tk.Frame):
     
     
 # Cancel Booking
-   def cancel(self):
-      a = self.complete_tbl.selection()[0]
-      driver_id = self.complete_tbl.item(a,"values")[1]
-      
+   def cancel(self):   
       con,cur = dbcon()
-      query = "delete from booking where Booking_id = %s"
+      
+      select = self.complete_tbl.selection()[0]
+      driver_id = self.complete_tbl.item(select,"values")[1]
+      
+   
+      query = "delete from booking where Booking_Id = %s"
       values = tuple(driver_id)
       
       cur.execute(query,values)

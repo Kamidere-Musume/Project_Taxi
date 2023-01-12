@@ -33,7 +33,7 @@ class Signup(tk.Frame):
         
     # Last Name
         # Last Name Label   
-        lname_lbl = canvas.create_text(200,220,text="Last Name",fill="black",font=("Terminal", 12))
+        lname_lbl = canvas.create_text(200,220,text="Last Name",fill="black",font=("Century", 12))
 
         # Last Name Entry Box
         self.lname_txt = tk.Entry(canvas)
@@ -41,7 +41,7 @@ class Signup(tk.Frame):
         
     # Email
         # Email Label
-        email_lbl = canvas.create_text(200,270,text="Email",fill="black",font=("Terminal", 12))
+        email_lbl = canvas.create_text(200,270,text="Email",fill="black",font=("Century", 12))
 
         # Email Entry Box
         self.email_txt = tk.Entry(canvas)
@@ -49,7 +49,7 @@ class Signup(tk.Frame):
 
     # Password
         # Password Label
-        pass_lbl = canvas.create_text(200,320,text="Password",fill="black",font=("Terminal", 12))
+        pass_lbl = canvas.create_text(200,320,text="Password",fill="black",font=("Century", 12))
         
         # Password Entry Box
         self.pass_txt = tk.Entry(canvas)
@@ -57,7 +57,7 @@ class Signup(tk.Frame):
 
     #Confirm password
         # Confirm Password Label 
-        conpass_lbl = canvas.create_text(200,375,text="Confirm password",fill="black",font=("Terminal", 12))
+        conpass_lbl = canvas.create_text(200,375,text="Confirm password",fill="black",font=("Century", 12))
         
     # Confirm Password Entry Box
         self.conpass_txt = tk.Entry(canvas)
@@ -65,7 +65,7 @@ class Signup(tk.Frame):
         
     # Address
         # Address Label
-        address_lbl = canvas.create_text(200,425,text="Address",fill="black",font=("Terminal", 12))
+        address_lbl = canvas.create_text(200,425,text="Address",fill="black",font=("Century", 12))
         
         # Address Entry Box
         self.address_txt = tk.Entry(canvas)
@@ -73,7 +73,7 @@ class Signup(tk.Frame):
         
     # User Type
         # User Label
-        user_lbl = canvas.create_text(200,575,text="User Type",fill="black",font=("Terminal", 12))
+        user_lbl = canvas.create_text(200,575,text="User Type",fill="black",font=("Century", 12))
         
         # User ComboBox
         self.user_box = ttk.Combobox(canvas,state="readonly",
@@ -81,7 +81,7 @@ class Signup(tk.Frame):
         self.user_box.place(x=350, y= 560,height=25,width=150)
         
     # Payment Method
-        payment_lbl = canvas.create_text(200,475,text="Payment method",fill="black",font=("Terminal", 12))
+        payment_lbl = canvas.create_text(200,475,text="Payment method",fill="black",font=("Century", 12))
 
     # Adding background text 
         def temp_text(e):
@@ -93,13 +93,13 @@ class Signup(tk.Frame):
         self.payment_txt.place(x=350,y=460, height=25, width=150)
           
     # Phone number
-        phone_lbl = canvas.create_text(200,525,text="Phone No",fill="black",font=("Terminal", 12))
+        phone_lbl = canvas.create_text(200,525,text="Phone No",fill="black",font=("Century", 12))
 
         self.phone_txt = tk.Entry(canvas)
         self.phone_txt.place(x=350, y=510,height=25,width=150)
         
     # Vehcile Number 
-        vechile_lbl = canvas.create_text(200,625,text="Vehcile ID",fill="black",font=("Terminal", 12))
+        vechile_lbl = canvas.create_text(200,625,text="Vehcile ID",fill="black",font=("Century", 12))
         
         self.vechile_txt = tk.Entry(canvas)
         self.vechile_txt.place(x=350,y=610,height=25,width=150)
@@ -131,19 +131,19 @@ class Signup(tk.Frame):
             messagebox.showerror("Error","invalid email address", parent = self)
         
         # First Name Validation
-        elif not re.search(r'^[a-zA-Z]{3,50}$',self.fname_txt.get()):
-            messagebox.showerror("Error","First name should be 6-20 letters")
+        elif not re.search(r'^[a-zA-Z]{3,20}$',self.fname_txt.get()):
+            messagebox.showerror("Error","First name should be 3-20 letters")
 
         # Last Name Validation
-        elif not re.search(r'^[a-zA-z]{3,50}$',self.lname_txt.get()):
-            messagebox.showerror("Error","Last name should be 6-20 letters",parent= self)
+        elif not re.search(r'^[a-zA-z]{3,20}$',self.lname_txt.get()):
+            messagebox.showerror("Error","Last name should be 3-20 letters",parent= self)
         
         # Password Validation
         elif not re.search(r'^[a-zA-Z0-9_@#$%&!\-]{6,16}$',self.pass_txt.get()):
              messagebox.showerror("Error","Invalid Password",parent = self)
              
         # Phone Number Validation 
-        elif not re.search(r'^\d{10}$',self.phone_txt.get()):
+        elif not re.search(r'^\d{9}$',self.phone_txt.get()):
             messagebox.showerror("Error","Phone number must be 9 digits",parent = self)
         
         else:
@@ -168,6 +168,7 @@ class Signup(tk.Frame):
                 cur.close()
                 con.close()
                 self.cleardata()
+                messagebox.showinfo("Info","Registered Sucessfully")
                 self.controller.show_frame("Login")
         
 # Clearing Data in table

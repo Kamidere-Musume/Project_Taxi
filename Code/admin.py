@@ -54,7 +54,7 @@ class AdminDash(tk.Tk):
         
         win = tk.Toplevel(self)
         win.geometry("1000x400")
-        win.title("Assigned")
+        win.title("Customer List")
         win.resizable(False,False)
     # frame 
         self.frm1 = tk.Frame(win, width=1045,height=800,background="#89a7b1")
@@ -111,7 +111,7 @@ class AdminDash(tk.Tk):
     
         win = tk.Toplevel(self)
         win.geometry("960x400")
-        win.title("Assigned")
+        win.title("Driver List")
         win.resizable(False,False)
             
     # frame 
@@ -269,12 +269,12 @@ class AdminDash(tk.Tk):
     def history(self):
         
         win = tk.Toplevel(self)
-        win.geometry("960x400")
-        win.title("Assigned")
+        win.geometry("1080x400")
+        win.title("History")
         win.resizable(False,False) 
     
     # frame 
-        self.frm1 = tk.Frame(win, width=960,height=800,background="#a7dbd8")
+        self.frm1 = tk.Frame(win, width=1080,height=800,background="#a7dbd8")
         self.frm1.place(relx=.5,rely=.1, anchor="c")
         
     # Title 
@@ -301,8 +301,9 @@ class AdminDash(tk.Tk):
         search_btn = tk.Button(win,text="Search",command=self.drivesearch)
         search_btn.place(x=200,y=100)
         
-        list1 = ["Driver ID","Driver First Name","Driver Last Name","Driver Phone Number","Vehicle ID","Driver Address","Driver Email","Driver Password"]
-        data1 = "select Driver_Id,Driver_Fname,Driver_Lname,Driver_Phone_Number,Vehicle_Id,Driver_Address,Driver_Email,Driver_Password from driver"
+        #list1 = ["Booking ID","User ID","User First Name","User Last Name","User Phone Number","Current Location","Destination","Price","Distance","Booking Status"]
+        list1 = ["Booking ID","Driver Name","Pick Up","Pick Off","Vehicle ID","Price","Date","Time","Booking Status"]
+        data1 = "select booking.Booking_Id,driver.Driver_Fname,booking.Current_Location,booking.Destination,driver.Vehicle_Id,booking.Price,booking.Pickup_Date,booking.Pickup_Time,booking.Booking_Status from booking inner join driver on driver.Driver_Id = booking.Driver_Id where Booking_Status = 'Completed'"
         
  # Frame and Treeview    
         self.frm = tk.Frame(win, width=500,height=200,background="bisque")
@@ -315,12 +316,17 @@ class AdminDash(tk.Tk):
         for i in list1:
             self.complete_tbl.column(i,stretch=NO,width=115)
             self.complete_tbl.heading(i,text=i)        
-       
-        rows = self.historydb()
+
+        con,cur = dbcon()
+        cur.execute(data1)
+        rows = cur.fetchall()
+        cur.close()
+        con.close()
+        
         for i in rows:
             self.complete_tbl.insert('','end',values=i)       
             
-
+       
                         
 # function for customer search
     def custsearch(self):
@@ -371,17 +377,7 @@ class AdminDash(tk.Tk):
         con.close()
         win.destroy()        
         self.book_tbl.item(a,values=[*booking_id[:-1],"Accepted"])
-
-
-# Action: History
-    def historydb(self):
-        con,cur = dbcon()
-        query = "select * from booking where Booking_Status = 'Completed'"
-        cur.execute(query)
-        data =  cur.fetchall()
-        cur.close()
-        con.close()
-        return data
+        messagebox.showinfo("Info","Sucessfully Assigned")
     
 # Action: Revenue 
     def revenue(self):

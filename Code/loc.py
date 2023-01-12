@@ -32,5 +32,3 @@ def findRoute(graph, a, b):
                 work.append({'at':place[0],'route':[*route,place],'distance':distance+place[1]})
         i += 1
 
-a = findRoute(graph,"Nakkhu","Kupondole")
-print(a)

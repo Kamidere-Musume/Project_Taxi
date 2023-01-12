@@ -9,6 +9,6 @@ def absPath(current, *args):
 
 
 def dbcon():
-    mydb = mysql.connector.connect(host = "localhost", user = "root",passwd="boop",database="taxi")
+    mydb = mysql.connector.connect(host = "localhost", user = "root",passwd="boop",database="booking")
     return mydb,mydb.cursor()
 
