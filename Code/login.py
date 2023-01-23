@@ -2,6 +2,7 @@ import tkinter as tk
 from help import absPath,dbcon
 from tkinter import messagebox
 from tkinter import ttk
+from admin import AdminDash
 
 class Login(tk.Frame):
     
@@ -45,7 +46,7 @@ class Login(tk.Frame):
         
         # User Combobox
         self.user_box = ttk.Combobox(canvas,state="readonly",
-        values=["Customer","Driver"])
+        values=["Customer","Driver","Admin"])
         self.user_box.place(x=620, y= 400,height=25,width=180)
         
     # Login Button
@@ -65,6 +66,7 @@ class Login(tk.Frame):
             con,cur = dbcon()
             query = "select * from user where User_Email = %s and User_Password = %s "
             query2 = "select * from driver where Driver_Email = %s and Driver_Password = %s"
+            query3 = "select * from admin where Admin_Email = %s and Admin_Password = %s"
             values = (self.email_txt.get(),self.pass_txt.get())
             
         # Validtaion
@@ -90,6 +92,9 @@ class Login(tk.Frame):
                         messagebox.showinfo("Info","Logged in Sucessful")
                         self.controller.show_frame("Dashboard")
                 
+                elif self.user_box.get() == "Admin":
+                   self.controller.show_frame("AdminDash")
+                    
             # Driver Dashboard
                 else:
                     cur.execute(query2,values)
@@ -100,8 +105,11 @@ class Login(tk.Frame):
                     
                     elif len(myresult)>0:
                         self.controller.user_id = myresult[0][0]
+                        messagebox.showinfo("Info","Logged in")
                         self.controller.show_frame("DriverDash")
-            
+
+
+
             cur.close()
             con.close()
         except Exception as e:

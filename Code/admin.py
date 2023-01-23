@@ -4,15 +4,16 @@ from help import absPath,dbcon
 from tkinter import ttk
 from tkinter import messagebox
 
-class AdminDash(tk.Tk):
+class AdminDash(tk.Frame):
     
     revenue = 0
-    def __init__(self):
+    def __init__(self,parent,controller):
         
-        super().__init__()
-        self.geometry("1045x800")
-        self.title("Admin")
-
+          
+        super().__init__(parent)
+        self.controller = controller
+        self.resolution = "1000x800"
+        self.title= "Login"
     # Adding Background Image 
         imagepath = absPath(__file__,"../pictures/admin2.png")
         bg = tk.PhotoImage(file=imagepath)
@@ -45,7 +46,7 @@ class AdminDash(tk.Tk):
         self.revenue_btn.place(x=630,y=700,height=80,width=100)
     
     # Exit Buttone
-        self.exit_btn = tk.Button(canvas,text="Exit",command= lambda: self.destroy() ,background="#CCCCFF")
+        self.exit_btn = tk.Button(canvas,text="Exit",command= lambda: self.controller.show_frame("Login") ,background="#CCCCFF")
         self.exit_btn.place(x=750,y=700,height=80,width=100)
 
         

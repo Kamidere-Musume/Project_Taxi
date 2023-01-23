@@ -3,7 +3,7 @@ from login import Login
 from signup import Signup
 from booking import Dashboard
 from driver_dash import DriverDash
-
+from admin import AdminDash
 
 class MainApp(tk.Tk):
     user_id = None  
@@ -19,7 +19,7 @@ class MainApp(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (Signup, Login,Dashboard,DriverDash):
+        for F in (Signup, Login,Dashboard,DriverDash,AdminDash):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
